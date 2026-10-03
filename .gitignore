@@ -1,0 +1,18 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secrets and local settings
+.env
+
+# Downloaded IRS PDFs (re-creatable with python -m taxlens.ingest.fetch)
+data/raw/
+*.part
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

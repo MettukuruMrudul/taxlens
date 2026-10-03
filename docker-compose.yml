@@ -1,0 +1,35 @@
+# Local infrastructure for TaxLens.
+#   db    = PostgreSQL 16 with the pgvector extension (stores documents, lines, embeddings)
+#   redis = cache (used later for repeated questions)
+#
+# Postgres is exposed on port 5433 (not the usual 5432) so it won't clash
+# with any Postgres you may already have installed.
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: taxlens-db
+    environment:
+      POSTGRES_USER: taxlens
+      POSTGRES_PASSWORD: taxlens
+      POSTGRES_DB: taxlens
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # SQL files in db/init run automatically the FIRST time the database starts.
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taxlens -d taxlens"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: taxlens-redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  pgdata:
