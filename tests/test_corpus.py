@@ -57,7 +57,7 @@ def test_validate_url_rejects_url_not_starting_with_prior_base():
 
 def test_validate_url_rejects_url_containing_irs_current():
     with pytest.raises(ValueError, match="irs-current"):
-        validate_url(f"https://www.irs.gov/pub/irs-current/f1040.pdf")
+        validate_url("https://www.irs.gov/pub/irs-current/f1040.pdf")
 
 
 def test_every_corpus_url_passes_validate_url():

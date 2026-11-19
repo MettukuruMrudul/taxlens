@@ -103,7 +103,7 @@ function Feedback({ queryId }: { queryId: number }) {
           <button type="submit" className="btn-quiet">Send</button>
         </form>
       )}
-      {state === "error" && <span className="error">Couldn't save feedback.</span>}
+      {state === "error" && <span className="error">Couldn’t save feedback.</span>}
     </div>
   );
 }

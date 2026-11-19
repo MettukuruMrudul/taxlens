@@ -4,9 +4,7 @@ All tests are pure-Python: no network calls, no database, no filesystem side-
 effects beyond temporary directories provided by pytest's `tmp_path` fixture.
 """
 import hashlib
-import io
-from pathlib import Path
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
