@@ -29,7 +29,9 @@ const YEAR_SOURCE: Record<string, string> = {
 type Props = { turn: Turn; activeRef: string | null; onCite: (turnId: string, c: Citation) => void };
 
 export default function AnswerTurn({ turn, activeRef, onCite }: Props) {
-  const yearNote = turn.compareYears
+  const yearNote = turn.status === "out_of_scope"
+    ? null
+    : turn.compareYears
     ? `Comparing tax years ${turn.compareYears.join(" and ")}`
     : turn.taxYear
       ? `Tax year ${turn.taxYear}${turn.yearSource && YEAR_SOURCE[turn.yearSource] ? `, ${YEAR_SOURCE[turn.yearSource]}` : ""}`

@@ -1,6 +1,6 @@
 # Runs on every push and pull request:
 #   backend  - ruff lint + pytest with coverage
-#   frontend - TypeScript type-check + production build
+#   frontend - ESLint + TypeScript type-check + production build
 # Runs weekly and on demand (Actions tab -> CI -> Run workflow):
 #   evaluation - fetch the IRS corpus, build the index, run both benchmarks,
 #                and fail if the answer-quality gate fails
@@ -42,8 +42,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
       - run: npm install
+      - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
         env:

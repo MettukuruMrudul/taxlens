@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Public_Sans } from "next/font/google";
+import type { ReactNode } from "react";
 import "./globals.css";
 
 // Public Sans is the U.S. Web Design System typeface: the voice of federal forms online.
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={publicSans.variable}>
       <body>{children}</body>

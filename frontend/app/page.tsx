@@ -31,19 +31,27 @@ export default function Home() {
   const threadEnd = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setSignedIn(Boolean(getToken()));
-    const saved = sessionStorage.getItem(YEAR_KEY);
-    if (saved) setYear(Number(saved));
+    // State is set only in the async callbacks, never synchronously in the effect
+    // body (React's set-state-in-effect rule). Nothing renders until `ready`.
     fetchMeta()
       .then((m) => {
         setYears(m.years);
         if (!m.index_loaded) setNotice(m.error ?? "The index isn't loaded yet.");
       })
       .catch((e: Error) => setNotice(e.message))
-      .finally(() => setReady(true));
+      .finally(() => {
+        setSignedIn(Boolean(getToken()));
+        const saved = sessionStorage.getItem(YEAR_KEY);
+        if (saved) setYear(Number(saved));
+        setReady(true);
+      });
   }, []);
 
-  useEffect(() => threadEnd.current?.scrollIntoView({ behavior: "smooth", block: "end" }), [turns]);
+  useEffect(() => {
+    // Braces matter: newer browsers make scrollIntoView return a Promise, and an
+    // effect must return nothing (or a clean-up function).
+    threadEnd.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [turns]);
 
   const chooseYear = (y: number | null) => {
     setYear(y);
@@ -155,7 +163,7 @@ export default function Home() {
         </form>
       </div>
 
-      <SourceViewer citation={active?.citation ?? null} />
+      <SourceViewer key={active?.key ?? "none"} citation={active?.citation ?? null} />
 
       {historyOpen && (
         <HistoryDrawer onClose={() => setHistoryOpen(false)}

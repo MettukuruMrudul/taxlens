@@ -69,7 +69,7 @@ flowchart LR
 
 ## Quickstart (Windows PowerShell)
 
-Prerequisites: Python 3.11+, Docker Desktop, Node.js 20 (for the web app).
+Prerequisites: Python 3.11+, Docker Desktop, Node.js 22 LTS or newer (for the web app; Next.js 16 needs 20.9+).
 
 ```powershell
 # 1. Infrastructure and Python environment

@@ -9,11 +9,11 @@ export default function SourceViewer({ citation }: { citation: Citation | null }
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // The parent gives this component a new `key` per citation, so src and error
+    // start fresh for each one; the effect only sets state in async callbacks.
+    if (!citation?.doc_id || !citation.page) return;
     let url: string | null = null;
     let cancelled = false;
-    setSrc(null);
-    setError(null);
-    if (!citation?.doc_id || !citation.page) return;
     fetchPageImage(citation)
       .then((u) => {
         url = u;
