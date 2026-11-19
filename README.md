@@ -1,5 +1,7 @@
 # TaxLens
 
+[![CI](https://github.com/MettukuruMrudul/taxlens/actions/workflows/ci.yml/badge.svg)](https://github.com/MettukuruMrudul/taxlens/actions/workflows/ci.yml)
+
 Tax-year-aware, citation-grounded question answering over IRS forms, instructions, and publications.
 
 > TaxLens provides information from IRS publications for educational purposes only. It is not tax advice.
