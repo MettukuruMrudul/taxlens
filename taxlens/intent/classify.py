@@ -48,6 +48,11 @@ OUT_OF_SCOPE_HINTS = re.compile(
     r"\b(state tax(es)?|california|new york state|texas|canada|uk|germany|vat|sales tax|"
     r"property tax|stock|invest\w*|tax software|accountant|cpa near|llc|congress|"
     r"crypto price|bitcoin price|credit score|credit card)\b", re.I)
+# A year comparison needs a comparison word or two different years.
+CHANGE_SIGNAL = re.compile(
+    r"\b(chang\w*|differ\w*|compar\w*|new|added|removed|renumber\w*|increas\w*|decreas\w*|"
+    r"versus|vs\.?|between|last year|previous year|prior year|year over year)\b", re.I)
+_YEARS = re.compile(r"\b20[0-4]\d\b")
 
 
 @dataclass
@@ -109,7 +114,18 @@ class IntentClassifier:
             order = probs.argsort()[::-1]
             alt = next(int(i) for i in order if classes[int(i)] != "out_of_scope")
             intent, conf = str(classes[alt]), float(probs[alt])
+        if intent == "cross_year_change" and not _is_comparison(q):
+            # "What does the 2022 Form 1040 ask about crypto?" names one year and
+            # asks nothing about change: answer it for that year only.
+            order = probs.argsort()[::-1]
+            alt = next(int(i) for i in order
+                       if classes[int(i)] not in ("cross_year_change", "out_of_scope"))
+            intent, conf = str(classes[alt]), float(probs[alt])
         return IntentResult(intent, conf)
+
+
+def _is_comparison(question: str) -> bool:
+    return bool(CHANGE_SIGNAL.search(question)) or len(set(_YEARS.findall(question))) >= 2
 
 
 _default: IntentClassifier | None = None

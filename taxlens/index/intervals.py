@@ -33,6 +33,17 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+_PAGE_FURNITURE = re.compile(
+    r"^(form|schedule|publication|pub\.?|instructions|\d{4})\b[^.]{0,60}\bpage \d+\s*$|\bcat\. ?no\.", re.I)
+
+
+def is_boilerplate(text: str) -> bool:
+    """Page headers and footers ("Form 1040 (2021) Page 2", "Cat. No. 11320B Form 1040 (2021)").
+    They carry no content and would otherwise match any question naming the form."""
+    t = normalize(text)
+    return len(t) <= 80 and bool(_PAGE_FURNITURE.search(t))
+
+
 @dataclass
 class Unit:
     form_code: str

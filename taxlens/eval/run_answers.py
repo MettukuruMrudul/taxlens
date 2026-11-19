@@ -115,7 +115,8 @@ def fmt(t) -> str:
     return f"{t:.1%}"
 
 
-def report(bench: str, system: str, rows: list[dict], summary: dict, n_years: list[int]) -> str:
+def report(bench: str, system: str, rows: list[dict], summary: dict, n_years: list[int],
+           n_verified: int = 0) -> str:
     lines = [f"# Answer evaluation: {Path(bench).name}", "",
              f"Run {datetime.now():%Y-%m-%d %H:%M}. System: `{system}`. Questions: {len(rows)}. "
              f"Corpus years: {n_years[0]}-{n_years[-1]}.", "",
@@ -131,7 +132,10 @@ def report(bench: str, system: str, rows: list[dict], summary: dict, n_years: li
         if not r["correct"]:
             ans = (r["answer"] or "—").replace("|", "/")[:160]
             lines.append(f"| {r['id']} | {r['tax_year']} | {r['status']} | {ans} |")
-    lines += ["", "Gold strings are Claude-drafted and not yet human-verified."]
+    if n_verified == len(rows):
+        lines += ["", "All gold answers verified against the IRS source PDFs (python -m taxlens.eval.verify_gold)."]
+    else:
+        lines += ["", f"{n_verified} of {len(rows)} gold answers verified; treat results as provisional."]
     return "\n".join(lines) + "\n"
 
 
@@ -187,7 +191,8 @@ def main() -> int:
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     out = RESULTS_DIR / f"answers_{Path(args.benchmark).stem}.md"
-    text = report(args.benchmark, system, rows, summary, pipeline.corpus.years)
+    text = report(args.benchmark, system, rows, summary, pipeline.corpus.years,
+                  sum(bool(q.get("verified")) for q in questions))
     out.write_text(text, encoding="utf-8")
     with open(RESULTS_DIR / "answer_features.jsonl", "w", encoding="utf-8") as f:
         for row in features:

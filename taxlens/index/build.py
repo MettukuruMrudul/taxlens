@@ -17,7 +17,7 @@ from psycopg.types.json import Jsonb
 from taxlens.config import REDIS_URL
 from taxlens.db import connect
 from taxlens.index.figures import extract_standard_deduction
-from taxlens.index.intervals import Unit, build_units, size_reduction
+from taxlens.index.intervals import Unit, build_units, is_boilerplate, size_reduction
 
 def _emit_index_version(version: str) -> None:
     """Write the new index version to Redis so the cache can be invalidated."""
@@ -58,6 +58,9 @@ def main() -> int | str:
         if not records:
             print("No line_records yet. Run: python -m taxlens.ingest.run_parser")
             return 1
+        n_all = len(records)
+        records = [r for r in records if not is_boilerplate(r["text"])]
+        print(f"Skipped {n_all - len(records)} page headers/footers (e.g. 'Form 1040 (2021) Page 2').")
 
         units = build_units(records)
         figures = extract_standard_deduction([r for r in records if r["form_code"] == "f1040"])

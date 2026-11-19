@@ -71,6 +71,49 @@ FORM_HINTS = {
 }
 RERANK_DEPTH = 20
 
+# Everyday words people use that IRS text doesn't (added to the BM25 query).
+THESAURUS = {
+    r"\bcrypto(currenc(y|ies))?\b|\bbitcoin\b|\bethereum\b": "virtual currency digital asset",
+    r"\bnfts?\b": "digital asset",
+    r"\bstimulus (check|payment)s?\b": "recovery rebate credit economic impact payment",
+    r"\bsocial security\b": "social security benefits",
+    r"\bw2\b": "w-2",
+    r"\bbirth ?dates?\b|\bdates? of birth\b|\bbirthdays?\b": "born",
+}
+# Asking where something goes on a form, or what a named form says.
+NAVIGATION = re.compile(
+    r"\b(where (do|should|can|would) (i|we) (enter|report|put|write|elect|claim|show|list)|"
+    r"where on|which line|what line|on (the|my) (\d{4} )?form|what does (the )?(\d{4} )?form)\b", re.I)
+NAMED_FORM = re.compile(r"\b(form 1040|1040 form|the 1040)\b", re.I)
+FORM_BOOST = 1.6          # BM25 multiplier for units of the form the question is about
+PROMOTE_RATIO = 0.3       # promote the best form unit if it scores >= 30% of the top hit
+
+
+# Words that say which document or year, not what the question is about.
+_FORM_WORDS = re.compile(r"\b(forms?|schedule [123ab]|1040(-sr)?|lines? \d{1,2}[a-z]?|20[0-4]\d|tax year)\b", re.I)
+
+
+def content_query(query: str) -> str:
+    """The question minus form names, line numbers and years: what it is about."""
+    return _FORM_WORDS.sub(" ", query)
+
+
+def expand_query(query: str) -> str:
+    extra = [words for pat, words in THESAURUS.items() if re.search(pat, query, re.I)]
+    return " ".join([query, *extra])
+
+
+def preferred_forms(query: str) -> set[str]:
+    """Form codes whose own text should outrank instructions and publications."""
+    if re.search(r"\binstructions?\b|\bpub(lication)?\.? ?17\b", query, re.I):
+        return set()          # the user asked for the instructions or Pub 17
+    forms = {fc for fc, pat in FORM_HINTS.items() if pat.search(query)}
+    if NAMED_FORM.search(query):
+        forms.add("f1040")
+    if not forms and NAVIGATION.search(query):
+        forms = {"f1040", *FORM_HINTS}   # "where do I enter X": some form line
+    return forms
+
 
 class YearAwareRetriever:
     """TaxLens: validity-interval units, filtered to the requested year.
@@ -81,6 +124,12 @@ class YearAwareRetriever:
        so text from another tax year can never be returned.
     2. BM25 keyword ranking, plus dense cosine ranking if unit embeddings and
        a query vector are available, fused with Reciprocal Rank Fusion.
+       The query is expanded with a small tax thesaurus ("crypto" also searches
+       "virtual currency digital asset"), and when the question names a form or
+       asks where something goes on one, that form's units get a BM25 boost so
+       the form line outranks long instruction passages that mention it; the
+       form unit that best matches the question's topic is moved to the top if
+       it scores at least 30% of the best hit on that topic.
     3. Structured line lookup. A question naming "line 30" gets that form
        line for the requested year ranked first (Form 1040 unless the
        question names a schedule).
@@ -107,7 +156,9 @@ class YearAwareRetriever:
 
     def search(self, query: str, year: int | None = None, k: int = 5, query_vector=None) -> list[Hit]:
         allowed = {i for i in range(len(self.units)) if year is None or self.units[i].applies_to(year)}
-        bm25 = {i: v for i, v in self.bm25.scores(query).items() if i in allowed}
+        raw = {i: v for i, v in self.bm25.scores(expand_query(query)).items() if i in allowed}
+        forms = preferred_forms(query)
+        bm25 = {i: v * (FORM_BOOST if self.units[i].form_code in forms else 1.0) for i, v in raw.items()}
         bm25_rank = sorted(bm25, key=bm25.get, reverse=True)
 
         if self.embeddings is not None and query_vector is not None and allowed:
@@ -135,6 +186,20 @@ class YearAwareRetriever:
                 scores[head[j]] = float(rr[j])
             rest = [head[j] for j in order] + rest[RERANK_DEPTH:]
 
+        if forms and rest:
+            # "Answer from the form, explain from the instructions": when the question is
+            # about a form, the form unit that best matches the question's *topic* goes
+            # first. Scoring on the topic (form names, years and line numbers removed)
+            # stops "Form 1040 (2021) Page 2"-style text winning on the form name alone.
+            topic = self.bm25.scores(expand_query(content_query(query)))
+            cands = [i for i in rest if self.units[i].form_code in forms and topic.get(i, 0.0) > 0]
+            if cands:
+                cand = max(cands, key=lambda i: topic[i])
+                best_topic = max(topic.get(i, 0.0) for i in rest[:RERANK_DEPTH])
+                if cand != rest[0] and topic[cand] >= PROMOTE_RATIO * best_topic:
+                    rest.remove(cand)
+                    rest.insert(0, cand)
+
         top_score = max((scores.get(i, 0.0) for i in rest[:1]), default=0.0)
         best = pinned + rest
         hits = []
@@ -143,7 +208,7 @@ class YearAwareRetriever:
             ref = u.sources.get(year) if year is not None else next(iter(u.sources.values()))
             score = top_score + 1.0 if i in pinned_set else scores.get(i, 0.0)
             hits.append(Hit(u.text, (u.valid_from, u.valid_to), score, ref, u.line_label,
-                            u.heading_path, u.form_code, bm25.get(i, 0.0), i in pinned_set))
+                            u.heading_path, u.form_code, raw.get(i, 0.0), i in pinned_set))
         return hits
 
     def count_for_year(self, year: int) -> int:

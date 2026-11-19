@@ -44,6 +44,9 @@ STATUS_NAMES = {"single_or_mfs": "single or married filing separately",
                 "mfj_or_qss": "married filing jointly or qualifying surviving spouse",
                 "head_of_household": "head of household"}
 FIGURE_TRIGGERS = {"standard_deduction": re.compile(r"\bstandard deduction\b", re.I)}
+# "...while taking the standard deduction?" asks about the choice, not the amount.
+FIGURE_CHOICE = re.compile(r"\b(if|while|when|instead of|or)\b[^?.]*\b(take|taking|claim|claiming|use|using|"
+                           r"choose|choosing|itemiz\w*)\b[^?.]*\bstandard deduction\b", re.I)
 
 
 @dataclass
@@ -100,6 +103,8 @@ def detect_filing_status(question: str) -> str | None:
 def figure_answer(question: str, tax_year: int, figures: list[dict]) -> list[Sentence] | None:
     """Answer straight from the figures table when the question asks for one.
     figures: rows of year_figures for the tax year."""
+    if FIGURE_CHOICE.search(question):
+        return None
     for parameter, trigger in FIGURE_TRIGGERS.items():
         if not trigger.search(question):
             continue
