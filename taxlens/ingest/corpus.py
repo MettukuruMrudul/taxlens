@@ -48,6 +48,9 @@ class CorpusDoc:
         return f"{IRS_PRIOR_BASE}/{self.filename}"
 
 
+MVP_DOC_COUNT = 36  # len(MVP_DOCS) * len(MVP_YEARS) == 9 * 4
+
+
 def mvp_corpus() -> list[CorpusDoc]:
     """Every (document, tax year) pair in the MVP corpus."""
     return [
@@ -55,3 +58,36 @@ def mvp_corpus() -> list[CorpusDoc]:
         for year in MVP_YEARS
         for code, doc_type, title in MVP_DOCS
     ]
+
+
+def count() -> int:
+    """Return the expected number of documents in the MVP corpus (36)."""
+    return MVP_DOC_COUNT
+
+
+def validate_url(url: str) -> bool:
+    """Return True iff *url* comes from the IRS prior-year archive.
+
+    Raises ``ValueError`` if the URL does not start with ``IRS_PRIOR_BASE``
+    or if it contains the string ``"irs-current"`` (which would mean we
+    accidentally fell back to the current-forms folder).
+    """
+    if not url.startswith(IRS_PRIOR_BASE):
+        raise ValueError(
+            f"URL does not start with IRS_PRIOR_BASE ({IRS_PRIOR_BASE!r}): {url!r}"
+        )
+    if "irs-current" in url:
+        raise ValueError(
+            f"URL must not reference the current-forms folder; got: {url!r}"
+        )
+    return True
+
+
+def full_corpus_doc_ids() -> list[str]:
+    """Return all doc_id strings for the full corpus.
+
+    .. note::
+        Not yet implemented — reserved for Phase 2 when the corpus expands
+        beyond the MVP set.
+    """
+    raise NotImplementedError("full_corpus_doc_ids is a Phase 2 placeholder")

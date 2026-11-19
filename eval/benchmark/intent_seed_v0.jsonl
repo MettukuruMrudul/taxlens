@@ -1,0 +1,140 @@
+{"id": "i001", "question": "What is the standard deduction for a single filer for 2023?", "intent_type": "figure_lookup"}
+{"id": "i002", "question": "How much is the standard deduction for married filing jointly in 2022?", "intent_type": "figure_lookup"}
+{"id": "i003", "question": "Standard deduction amount for head of household for 2024?", "intent_type": "figure_lookup"}
+{"id": "i004", "question": "What was the standard deduction on my 2021 return?", "intent_type": "figure_lookup"}
+{"id": "i005", "question": "How big is the standard deduction for 2024 if I'm single?", "intent_type": "figure_lookup"}
+{"id": "i006", "question": "What's the 2023 standard deduction for a qualifying surviving spouse?", "intent_type": "figure_lookup"}
+{"id": "i007", "question": "How much is the additional standard deduction for being 65 or older in 2023?", "intent_type": "figure_lookup"}
+{"id": "i008", "question": "What is the maximum child tax credit per child for 2021?", "intent_type": "figure_lookup"}
+{"id": "i009", "question": "How much can I deduct for educator expenses in 2023?", "intent_type": "figure_lookup"}
+{"id": "i010", "question": "What is the student loan interest deduction limit for 2022?", "intent_type": "figure_lookup"}
+{"id": "i011", "question": "What is the dollar limit for the saver's credit in 2024?", "intent_type": "figure_lookup"}
+{"id": "i012", "question": "How much is the standard deduction for someone who can be claimed as a dependent in 2022?", "intent_type": "figure_lookup"}
+{"id": "i013", "question": "What amount of gambling winnings must be reported on the 2023 return?", "intent_type": "figure_lookup"}
+{"id": "i014", "question": "What is the cap on SALT deductions for 2024?", "intent_type": "figure_lookup"}
+{"id": "i015", "question": "How much is the standard mileage rate for medical driving in 2023?", "intent_type": "figure_lookup"}
+{"id": "i016", "question": "What is the earned income credit maximum for 2022 with two children?", "intent_type": "figure_lookup"}
+{"id": "i017", "question": "Standard deduction for married filing separately in 2024?", "intent_type": "figure_lookup"}
+{"id": "i018", "question": "How much is the 2021 recovery rebate credit per person?", "intent_type": "figure_lookup"}
+{"id": "i019", "question": "What dollar amount is the 2023 standard deduction for heads of household?", "intent_type": "figure_lookup"}
+{"id": "i020", "question": "What is the threshold for the medical expense deduction percentage in 2022?", "intent_type": "figure_lookup"}
+{"id": "i021", "question": "Can I claim my mother as a dependent for 2023?", "intent_type": "rule_or_eligibility"}
+{"id": "i022", "question": "Do I qualify for head of household status in 2022?", "intent_type": "rule_or_eligibility"}
+{"id": "i023", "question": "Am I required to file a tax return for 2024 if I only earned $5,000?", "intent_type": "rule_or_eligibility"}
+{"id": "i024", "question": "Can I deduct charitable contributions in 2021 if I take the standard deduction?", "intent_type": "rule_or_eligibility"}
+{"id": "i025", "question": "Is unemployment compensation taxable for 2022?", "intent_type": "rule_or_eligibility"}
+{"id": "i026", "question": "Do I count as 65 or older if I was born January 1, 1958, for 2022?", "intent_type": "rule_or_eligibility"}
+{"id": "i027", "question": "Who qualifies as a qualifying child for 2023?", "intent_type": "rule_or_eligibility"}
+{"id": "i028", "question": "Can married filing separately couples take the earned income credit in 2021?", "intent_type": "rule_or_eligibility"}
+{"id": "i029", "question": "Am I eligible to itemize deductions in 2024 if my spouse takes the standard deduction?", "intent_type": "rule_or_eligibility"}
+{"id": "i030", "question": "Is my scholarship taxable income for 2023?", "intent_type": "rule_or_eligibility"}
+{"id": "i031", "question": "Do I have to report cryptocurrency on my 2022 return?", "intent_type": "rule_or_eligibility"}
+{"id": "i032", "question": "Can I file jointly if my spouse died in 2023?", "intent_type": "rule_or_eligibility"}
+{"id": "i033", "question": "Is a gift from my parents taxable to me for 2024?", "intent_type": "rule_or_eligibility"}
+{"id": "i034", "question": "Do I need to pay estimated tax for 2023 if I'm self-employed?", "intent_type": "rule_or_eligibility"}
+{"id": "i035", "question": "Can a nonresident alien claim the standard deduction in 2022?", "intent_type": "rule_or_eligibility"}
+{"id": "i036", "question": "Are state tax refunds taxable on the 2021 federal return?", "intent_type": "rule_or_eligibility"}
+{"id": "i037", "question": "Does my 17-year-old qualify for the child tax credit in 2021?", "intent_type": "rule_or_eligibility"}
+{"id": "i038", "question": "Can I deduct mortgage interest on a second home for 2024?", "intent_type": "rule_or_eligibility"}
+{"id": "i039", "question": "Must I report tips under $20 for 2023?", "intent_type": "rule_or_eligibility"}
+{"id": "i040", "question": "Is alimony received taxable for divorces after 2018 on my 2022 return?", "intent_type": "rule_or_eligibility"}
+{"id": "i041", "question": "Which line of Form 1040 do I report my W-2 wages on for 2023?", "intent_type": "form_navigation"}
+{"id": "i042", "question": "Where do I enter estimated tax payments I made for 2022?", "intent_type": "form_navigation"}
+{"id": "i043", "question": "What is line 30 of Form 1040 used for in 2024?", "intent_type": "form_navigation"}
+{"id": "i044", "question": "Where on the 2023 Form 1040 do I elect the lump-sum method for social security?", "intent_type": "form_navigation"}
+{"id": "i045", "question": "Which schedule do I use to report unemployment compensation for 2022?", "intent_type": "form_navigation"}
+{"id": "i046", "question": "What line do I put my IRA distributions on for 2021?", "intent_type": "form_navigation"}
+{"id": "i047", "question": "Where does the standard deduction go on the 2024 Form 1040?", "intent_type": "form_navigation"}
+{"id": "i048", "question": "Which form do I use to itemize deductions in 2023?", "intent_type": "form_navigation"}
+{"id": "i049", "question": "What line of Schedule 1 is for student loan interest in 2022?", "intent_type": "form_navigation"}
+{"id": "i050", "question": "Which line lets me apply part of my 2023 overpayment to next year's estimated tax?", "intent_type": "form_navigation"}
+{"id": "i051", "question": "Where do I report interest income over $1,500 for 2024?", "intent_type": "form_navigation"}
+{"id": "i052", "question": "What does line 12 of the 2021 Form 1040 mean?", "intent_type": "form_navigation"}
+{"id": "i053", "question": "Where on Form 1040 is the digital asset question for 2022?", "intent_type": "form_navigation"}
+{"id": "i054", "question": "Which schedule reports the additional child tax credit in 2023?", "intent_type": "form_navigation"}
+{"id": "i055", "question": "What line is total income on the 2024 Form 1040?", "intent_type": "form_navigation"}
+{"id": "i056", "question": "Where do I enter my refund bank account number on the 2022 1040?", "intent_type": "form_navigation"}
+{"id": "i057", "question": "Which line of Schedule A is for medical and dental expenses in 2023?", "intent_type": "form_navigation"}
+{"id": "i058", "question": "Where do I report self-employment tax for 2024?", "intent_type": "form_navigation"}
+{"id": "i059", "question": "Which line on Form 1040 shows taxable income for 2021?", "intent_type": "form_navigation"}
+{"id": "i060", "question": "What schedule do I attach for the premium tax credit repayment in 2022?", "intent_type": "form_navigation"}
+{"id": "i061", "question": "How do I calculate my taxable income for 2023?", "intent_type": "procedure_or_computation"}
+{"id": "i062", "question": "How do I figure the taxable part of my social security benefits for 2022?", "intent_type": "procedure_or_computation"}
+{"id": "i063", "question": "What are the steps to compute my medical expense deduction for 2024?", "intent_type": "procedure_or_computation"}
+{"id": "i064", "question": "How do I compute the amount I owe on the 2021 Form 1040?", "intent_type": "procedure_or_computation"}
+{"id": "i065", "question": "How do I figure my standard deduction if I'm blind and over 65 in 2023?", "intent_type": "procedure_or_computation"}
+{"id": "i066", "question": "Walk me through filling out Schedule B for 2022.", "intent_type": "procedure_or_computation"}
+{"id": "i067", "question": "How do I calculate the additional standard deduction for 2024?", "intent_type": "procedure_or_computation"}
+{"id": "i068", "question": "How do I amend my 2022 return?", "intent_type": "procedure_or_computation"}
+{"id": "i069", "question": "How do I figure my estimated tax payments for 2024?", "intent_type": "procedure_or_computation"}
+{"id": "i070", "question": "How do I compute the earned income credit for 2023?", "intent_type": "procedure_or_computation"}
+{"id": "i071", "question": "What steps do I follow to report a 1099-NEC for 2022?", "intent_type": "procedure_or_computation"}
+{"id": "i072", "question": "How do I calculate my state and local tax deduction for 2023?", "intent_type": "procedure_or_computation"}
+{"id": "i073", "question": "How should I figure total payments on the 2024 Form 1040?", "intent_type": "procedure_or_computation"}
+{"id": "i074", "question": "How do I work out my refund amount for 2021?", "intent_type": "procedure_or_computation"}
+{"id": "i075", "question": "Explain how to complete the qualified dividends worksheet for 2023.", "intent_type": "procedure_or_computation"}
+{"id": "i076", "question": "How do I calculate the recovery rebate credit on my 2021 return?", "intent_type": "procedure_or_computation"}
+{"id": "i077", "question": "How do I figure the charitable contribution limit for 2022?", "intent_type": "procedure_or_computation"}
+{"id": "i078", "question": "How do I compute adjusted gross income for 2024?", "intent_type": "procedure_or_computation"}
+{"id": "i079", "question": "What's the process to request a filing extension for 2023?", "intent_type": "procedure_or_computation"}
+{"id": "i080", "question": "How do I calculate the taxable portion of an IRA distribution for 2022?", "intent_type": "procedure_or_computation"}
+{"id": "i081", "question": "What is adjusted gross income?", "intent_type": "definition"}
+{"id": "i082", "question": "What does head of household mean for 2023?", "intent_type": "definition"}
+{"id": "i083", "question": "What is a qualifying surviving spouse?", "intent_type": "definition"}
+{"id": "i084", "question": "Define earned income for 2022.", "intent_type": "definition"}
+{"id": "i085", "question": "What is a digital asset according to the 2023 instructions?", "intent_type": "definition"}
+{"id": "i086", "question": "What counts as a dependent?", "intent_type": "definition"}
+{"id": "i087", "question": "What does modified adjusted gross income mean for 2024?", "intent_type": "definition"}
+{"id": "i088", "question": "What is the recovery rebate credit?", "intent_type": "definition"}
+{"id": "i089", "question": "What is a qualified dividend?", "intent_type": "definition"}
+{"id": "i090", "question": "What does taxable income mean on Form 1040 for 2021?", "intent_type": "definition"}
+{"id": "i091", "question": "What is an itemized deduction?", "intent_type": "definition"}
+{"id": "i092", "question": "What does filing status mean?", "intent_type": "definition"}
+{"id": "i093", "question": "What is a refundable credit?", "intent_type": "definition"}
+{"id": "i094", "question": "What is the lump-sum election for social security benefits?", "intent_type": "definition"}
+{"id": "i095", "question": "What does nonresident alien mean in the 2022 instructions?", "intent_type": "definition"}
+{"id": "i096", "question": "What is a qualifying relative?", "intent_type": "definition"}
+{"id": "i097", "question": "What are estimated tax payments?", "intent_type": "definition"}
+{"id": "i098", "question": "What does excess advance premium tax credit repayment mean for 2023?", "intent_type": "definition"}
+{"id": "i099", "question": "What is a 1099-K?", "intent_type": "definition"}
+{"id": "i100", "question": "Define the term earned income credit for 2024.", "intent_type": "definition"}
+{"id": "i101", "question": "How did the standard deduction change from 2022 to 2023?", "intent_type": "cross_year_change"}
+{"id": "i102", "question": "What changed on Form 1040 between 2021 and 2022?", "intent_type": "cross_year_change"}
+{"id": "i103", "question": "Is line 30 different in 2022 compared to 2021?", "intent_type": "cross_year_change"}
+{"id": "i104", "question": "Did the crypto question wording change from 2021 to 2022?", "intent_type": "cross_year_change"}
+{"id": "i105", "question": "How much did the standard deduction for single filers increase from 2023 to 2024?", "intent_type": "cross_year_change"}
+{"id": "i106", "question": "What's new on the 2024 Form 1040 compared to last year?", "intent_type": "cross_year_change"}
+{"id": "i107", "question": "Was the charitable deduction for non-itemizers removed after 2021?", "intent_type": "cross_year_change"}
+{"id": "i108", "question": "How is the 2023 Schedule 1 different from the 2022 one?", "intent_type": "cross_year_change"}
+{"id": "i109", "question": "Compare the head of household standard deduction in 2021 and 2024.", "intent_type": "cross_year_change"}
+{"id": "i110", "question": "Did the age 65 birth date cutoff change between 2022 and 2023?", "intent_type": "cross_year_change"}
+{"id": "i111", "question": "What changed in the child tax credit from 2021 to 2022?", "intent_type": "cross_year_change"}
+{"id": "i112", "question": "How does the 2024 standard deduction compare with 2021?", "intent_type": "cross_year_change"}
+{"id": "i113", "question": "Which Form 1040 lines were renumbered between 2021 and 2022?", "intent_type": "cross_year_change"}
+{"id": "i114", "question": "Did the wages line change from 2021 to 2022?", "intent_type": "cross_year_change"}
+{"id": "i115", "question": "What's different about the digital asset question in 2024 versus 2023?", "intent_type": "cross_year_change"}
+{"id": "i116", "question": "How did the recovery rebate credit line change after 2021?", "intent_type": "cross_year_change"}
+{"id": "i117", "question": "Did Schedule A change between 2022 and 2023?", "intent_type": "cross_year_change"}
+{"id": "i118", "question": "Compare the married filing jointly standard deduction across 2022 and 2023.", "intent_type": "cross_year_change"}
+{"id": "i119", "question": "What was added to the 2022 Form 1040 that wasn't there in 2021?", "intent_type": "cross_year_change"}
+{"id": "i120", "question": "How did the estimated tax payments line wording change from 2023 to 2024?", "intent_type": "cross_year_change"}
+{"id": "i121", "question": "What's the best pizza place in Boston?", "intent_type": "out_of_scope"}
+{"id": "i122", "question": "Should I buy Tesla stock this year?", "intent_type": "out_of_scope"}
+{"id": "i123", "question": "How do I file California state taxes?", "intent_type": "out_of_scope"}
+{"id": "i124", "question": "What is the weather tomorrow?", "intent_type": "out_of_scope"}
+{"id": "i125", "question": "Write me a poem about spring.", "intent_type": "out_of_scope"}
+{"id": "i126", "question": "How do I reduce my property tax assessment in Texas?", "intent_type": "out_of_scope"}
+{"id": "i127", "question": "Which tax software is the cheapest?", "intent_type": "out_of_scope"}
+{"id": "i128", "question": "Can you recommend a good accountant near me?", "intent_type": "out_of_scope"}
+{"id": "i129", "question": "How do I file taxes in Canada?", "intent_type": "out_of_scope"}
+{"id": "i130", "question": "What's the VAT rate in Germany?", "intent_type": "out_of_scope"}
+{"id": "i131", "question": "How do I invest in an index fund?", "intent_type": "out_of_scope"}
+{"id": "i132", "question": "What is the capital of France?", "intent_type": "out_of_scope"}
+{"id": "i133", "question": "Will Congress raise taxes next year?", "intent_type": "out_of_scope"}
+{"id": "i134", "question": "How do I get a mortgage pre-approval?", "intent_type": "out_of_scope"}
+{"id": "i135", "question": "What is the sales tax in New York City?", "intent_type": "out_of_scope"}
+{"id": "i136", "question": "Translate this sentence into Spanish.", "intent_type": "out_of_scope"}
+{"id": "i137", "question": "How do I start an LLC in Delaware?", "intent_type": "out_of_scope"}
+{"id": "i138", "question": "Is it a good idea to pay off my car loan early?", "intent_type": "out_of_scope"}
+{"id": "i139", "question": "Who won the Super Bowl last year?", "intent_type": "out_of_scope"}
+{"id": "i140", "question": "How do I check my credit score?", "intent_type": "out_of_scope"}

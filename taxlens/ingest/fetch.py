@@ -3,8 +3,9 @@
 Run from the project folder:
     python -m taxlens.ingest.fetch
 
-Safe to re-run. Files already on disk are not downloaded again, and a
-manifest row is only rewritten when the file's hash has changed.
+Safe to re-run. Files already on disk whose SHA-256 matches the database record
+are skipped entirely (no download, no DB write). A manifest row is only rewritten
+when the file's hash has changed.
 """
 import argparse
 import hashlib
@@ -33,6 +34,10 @@ ON CONFLICT (doc_id) DO UPDATE SET
 WHERE documents.sha256 IS DISTINCT FROM EXCLUDED.sha256
 """
 
+# Delays (seconds) between successive retry attempts.  Two retries means three
+# total attempts; the first delay is 2 s, the second is 4 s.
+RETRY_DELAYS = [2, 4]
+
 
 class NotOnIRS(Exception):
     """The IRS returned 404: this document doesn't exist for this year."""
@@ -46,9 +51,29 @@ def sha256_of(path: Path) -> str:
     return digest.hexdigest()
 
 
-def download(url: str, dest: Path, session: requests.Session, retries: int = 3) -> None:
-    """Download url to dest, retrying temporary failures with backoff."""
-    for attempt in range(1, retries + 1):
+def db_sha256(conn, doc_id: str) -> str | None:
+    """Return the SHA-256 stored in the documents table for doc_id, or None."""
+    row = conn.execute(
+        "SELECT sha256 FROM documents WHERE doc_id = %(doc_id)s",
+        {"doc_id": doc_id},
+    ).fetchone()
+    return row[0] if row else None
+
+
+def download(url: str, dest: Path, session: requests.Session) -> None:
+    """Download *url* to *dest*, retrying temporary failures with backoff.
+
+    Makes at most ``1 + len(RETRY_DELAYS)`` attempts (default: 3).
+    Raises ``NotOnIRS`` immediately on HTTP 404 — that is a per-document
+    failure, not a transient error.
+    """
+    last_exc: Exception | None = None
+    delays = [None] + RETRY_DELAYS  # first attempt has no preceding delay
+    for attempt_idx, delay in enumerate(delays):
+        if delay is not None:
+            retry_num = attempt_idx  # 1-based retry count
+            print(f"    retry {retry_num}/{len(RETRY_DELAYS)} in {delay}s ({last_exc})")
+            time.sleep(delay)
         try:
             resp = session.get(url, timeout=60)
             if resp.status_code == 404:
@@ -64,11 +89,9 @@ def download(url: str, dest: Path, session: requests.Session, retries: int = 3) 
         except NotOnIRS:
             raise
         except (requests.RequestException, ValueError) as exc:
-            if attempt == retries:
-                raise
-            wait = 2 ** attempt
-            print(f"    retry {attempt}/{retries - 1} in {wait}s ({exc})")
-            time.sleep(wait)
+            last_exc = exc
+    # All attempts exhausted
+    raise last_exc  # type: ignore[misc]
 
 
 def manifest_row(doc: CorpusDoc, path: Path) -> dict:
@@ -102,14 +125,29 @@ def main() -> int:
             dest = RAW_DIR / doc.filename
             label = f"[{i:>2}/{len(docs)}] {doc.doc_id}"
             try:
-                if args.force or not dest.exists():
-                    print(f"{label}: downloading")
-                    download(doc.url, dest, session)
-                    time.sleep(1)  # be polite to irs.gov
-                else:
-                    print(f"{label}: already on disk")
+                if not args.force and dest.exists():
+                    # Idempotent skip: only skip when the on-disk hash matches
+                    # the hash stored in the database, so a partial or corrupted
+                    # download is re-fetched automatically.
+                    disk_hash = sha256_of(dest)
+                    stored_hash = db_sha256(conn, doc.doc_id)
+                    if stored_hash is not None and disk_hash == stored_hash:
+                        print(f"{label}: already on disk and DB hash matches — skipping")
+                        continue  # skip both download AND DB upsert
+                    else:
+                        print(f"{label}: on disk but hash mismatch or not in DB — re-downloading")
+
+                print(f"{label}: downloading")
+                download(doc.url, dest, session)
+                time.sleep(1)  # be polite to irs.gov
                 conn.execute(UPSERT_SQL, manifest_row(doc, dest))
                 conn.commit()
+            except NotOnIRS as exc:
+                # HTTP 404 is a per-document failure; log it and keep going.
+                conn.rollback()
+                reason = f"NotOnIRS: {exc}"
+                failed.append((doc.doc_id, reason))
+                print(f"{label}: FAILED — document not found on IRS.gov (404)")
             except Exception as exc:  # keep going; report everything at the end
                 conn.rollback()
                 failed.append((doc.doc_id, f"{type(exc).__name__}: {exc}"))

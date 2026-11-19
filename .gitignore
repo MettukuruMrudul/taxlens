@@ -3,13 +3,31 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
 
 # Secrets and local settings
 .env
+frontend/.env.local
 
 # Downloaded IRS PDFs (re-creatable with python -m taxlens.ingest.fetch)
 data/raw/
 *.part
+
+# Generated training data and trained models (re-creatable)
+data/training/
+models/
+
+# Audit page images (re-creatable with python -m taxlens.eval.parse_audit sample)
+eval/parse_audit/pages/
+
+# Frontend build output
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/next-env.d.ts
 
 # Editors / OS
 .vscode/

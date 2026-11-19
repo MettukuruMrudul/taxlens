@@ -1,0 +1,7 @@
+# Optional neural models and tracing. Large download (PyTorch).
+#   pip install -r requirements-ml.txt
+# Then set EMBED_MODEL / RERANK_MODEL / NLI_MODEL in .env.
+sentence-transformers>=3.0
+xgboost>=2.0
+opentelemetry-sdk>=1.25
+opentelemetry-exporter-otlp-proto-http>=1.25

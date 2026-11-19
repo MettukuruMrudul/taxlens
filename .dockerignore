@@ -1,0 +1,11 @@
+.venv
+.git
+.env
+**/__pycache__
+.pytest_cache
+.ruff_cache
+frontend
+data/raw
+data/training
+models
+.kiro

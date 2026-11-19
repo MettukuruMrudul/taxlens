@@ -1,0 +1,28 @@
+[project]
+name = "taxlens"
+version = "1.0.0"
+description = "Tax-year-aware, citation-grounded Q&A over IRS forms and publications"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"
+# Upstream notice from Starlette's test client, not from TaxLens code; revisit
+# when FastAPI's TestClient moves off httpx.
+filterwarnings = ["ignore:Using .httpx. with .starlette.testclient. is deprecated"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = ["frontend", ".kiro"]
+
+[tool.ruff.lint]
+# ruff's default rule set (syntax errors, undefined names, unused imports).
+# Tighten later with "I" (import order) and "B" (bugbear) once the codebase is clean.
+select = ["E4", "E7", "E9", "F"]
+ignore = ["E731", "E741"]
+
+[tool.coverage.run]
+source = ["taxlens"]
+omit = ["taxlens/ingest/fetch.py", "taxlens/index/embed.py", "taxlens/retrieve/dense.py"]
