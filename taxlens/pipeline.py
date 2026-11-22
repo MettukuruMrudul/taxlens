@@ -87,6 +87,7 @@ class Result:
     abstain_reason: str | None = None
     features: dict | None = None
     attempt: str = ""           # text generated before the abstention decision (for training)
+    notes: list = field(default_factory=list)  # e.g. LLM errors behind an extractive fallback
     timings: dict = field(default_factory=dict)
     disclaimer: str = DISCLAIMER
 
@@ -184,6 +185,7 @@ class Pipeline:
                 sp.set("unsupported_claim_rate", round(answer.unsupported_claim_rate, 4))
 
             res.mode = answer.mode
+            res.notes = list(answer.notes)
             res.unsupported_claim_rate = answer.unsupported_claim_rate
             res.p_correct = round(decision.p_correct, 3)
             res.features = dict(features.__dict__)

@@ -1,5 +1,3 @@
-import pytest
-
 from taxlens.answer.generate import (DISCLAIMER, MAX_ATTRIBUTION_RETRIES, AnswerGenerator, Passage,
                                      detect_filing_status, figure_answer, iter_lines, parse_line)
 from taxlens.llm import LLMTimeout, parse_json
@@ -68,9 +66,10 @@ def test_bad_llm_output_falls_back_to_quoting():
     assert a.mode == "extractive_fallback" and "Reserved for future use" in a.text()
 
 
-def test_llm_timeout_propagates():
-    with pytest.raises(LLMTimeout):
-        AnswerGenerator(FakeLLM(fail=LLMTimeout("slow"))).generate("What is line 30 for in 2023?", 2023, P)
+def test_llm_timeout_falls_back_to_quoting_with_a_note():
+    a = AnswerGenerator(FakeLLM(fail=LLMTimeout("slow"))).generate("What is line 30 for in 2023?", 2023, P)
+    assert a.mode == "extractive_fallback" and "Reserved for future use" in a.text()
+    assert any("timeout" in n for n in a.notes)
 
 
 def test_extractive_mode_without_llm_is_fully_supported():

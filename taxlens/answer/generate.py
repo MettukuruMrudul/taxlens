@@ -296,8 +296,10 @@ class AnswerGenerator:
                 if fixed is not None:
                     stats.sentences.append(fixed)
                     yield fixed
-        except LLMTimeout:
-            raise
+        except LLMTimeout as e:
+            # A slow model must not crash a request or a whole benchmark run:
+            # record why and fall back to quoting the passages below.
+            stats.notes.append(f"llm timeout: {e}")
         except LLMError as e:
             stats.notes.append(f"llm error: {e}")
         if produced == 0 and not stats.sentences:

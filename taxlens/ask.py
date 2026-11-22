@@ -44,6 +44,10 @@ def main() -> int:
         print(f"\nintent={res.intent} mode={res.mode} p_correct={res.p_correct} "
               f"unsupported_claim_rate={res.unsupported_claim_rate:.2f} reason={res.abstain_reason}")
         print("timings (ms):", res.timings)
+        for note in res.notes:
+            print("note:", note)
+        if res.mode == "extractive_fallback" and not res.notes:
+            print("note: the LLM answered, but with no usable cited sentence (it may have said it can't answer)")
     print(f"\n{res.disclaimer}")
     return 0 if res.status == "answered" else 2
 

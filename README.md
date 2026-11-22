@@ -139,27 +139,40 @@ Reports are written to `eval/results/`. Every metric is reported with a 95% boot
   Claude) covering the instructions and Publication 17. Written after the dev fixes and not used for tuning.
   This is the number to quote.
 
-Results below are extractive mode (`LLM_PROVIDER=none`, BM25 only), run 2026-11-22.
+Results below were run 2026-11-22 in two answer modes: **extractive** (`LLM_PROVIDER=none`, quotes IRS
+text) and **LLM** (Gemini 3.5 Flash-Lite via the free Gemini API, every sentence cited and verified).
+Retrieval is BM25 in both.
 
-| Metric | Target | Held-out (26) | Dev (44) |
-|---|---|---|---|
-| Wrong-year answer rate | ≤ 3% | **0%** | 0% |
-| Citations from the asked tax year | 100% | **100%** | 100% |
-| Year-detection accuracy | ≥ 95% | **100%** | 100% |
-| Unsupported-claim rate | ≤ 5% | **0%** | 0% |
-| Answer correctness | ≥ 85% | **50.0%** [31–69%] | 97.7% [93–100%] |
-| Abstained / declined | | 11.5% | 0% |
-| Intent macro-F1 | ≥ 0.85 | not yet measured on verified labels | |
-| Abstention AUROC | ≥ 0.90 | not yet measured (rule-based abstainer) | |
-| Streaming time to first sentence (p50) | ≤ 1 s | not yet measured | |
+| Metric | Target | Held-out, extractive | Held-out, LLM | Dev, extractive | Dev, LLM |
+|---|---|---|---|---|---|
+| Wrong-year answer rate | ≤ 3% | **0%** | **0%** | 0% | 0% |
+| Citations from the asked tax year | 100% | **100%** | **100%** | 100% | 100% |
+| Year-detection accuracy | ≥ 95% | **100%** | **100%** | 100% | 100% |
+| Unsupported claims shown to users | ≤ 5% | **0%** | **0%** | 0% | 0% |
+| Claims caught and removed by the verifier | | 0% | 0% | 0% | 0.8% |
+| Answer correctness | ≥ 85% | **50.0%** [31–69%] | **61.5%** [42–81%] | 97.7% | 97.7% |
+| Accuracy on answered questions | | 56.5% | 69.6% | 97.7% | 97.7% |
+| Abstained / declined | | 11.5% | 11.5% | 0% | 0% |
+| Intent macro-F1 | ≥ 0.85 | not yet measured on verified labels | | | |
+| Abstention AUROC | ≥ 0.90 | not yet measured (rule-based abstainer) | | | |
+| Streaming time to first sentence (p50) | ≤ 1 s | not yet measured (single LLM answers take ~0.6 s end to end) | | | |
 
-**Reading the gap.** The year-safety guarantees held on unseen questions: no answer used another year's text,
-no citation came from the wrong year, and no claim was unsupported. Accuracy dropped because the held-out set
-asks for facts deep in the instructions and Publication 17, where extractive quoting falls short. The main
-held-out failure groups: the answer lies past the quoted excerpt (an LLM would extract it), answers inside
-tables (EIC), an out-of-scope guard missing words like *401(k)* and *mileage*, and one dev-set rule (form-first
-retrieval) that misfired on a deadline question. Fixes for these will be measured on a new held-out set, since
-this one has now been inspected.
+**Reading the results.** The year-safety guarantees held on unseen questions in both modes: no answer used
+another year's text, no citation came from the wrong year, and no unsupported claim reached the user. On the
+held-out set the LLM answered 4 questions that extractive quoting missed (the answer sat past the quoted
+excerpt) and got 1 wrong that extractive got right (it answered from a passage about dependents: supported by
+its citation, but not responsive to the question; the verifier checks faithfulness, not relevance). With 26
+questions that difference is directional, not statistically significant. Remaining held-out failures are
+upstream of the LLM: an out-of-scope guard missing words like *401(k)* and *mileage*, answers inside tables
+(EIC), "additional standard deduction" triggering the regular figure, and one dev-set rule (form-first
+retrieval) that misfired on a deadline question. Fixes will be measured on a new held-out set, since this one
+has now been inspected.
+
+**Rubric note.** Dev-set "which line" questions originally accepted only the line's exact wording, which
+favoured extractive quoting; an LLM answering "line 26" was marked wrong. Rubric v1 also accepts the line
+number (and "$300" for the 2021 charity question); each change is noted in `seed_v0.jsonl`, and both modes
+were re-graded. One known gap: for 2021 wages the LLM's correct "line 1" is still marked wrong, because a
+plain "line 1" match would also accept "line 12". Held-out answers are numbers and were not affected.
 
 The 140-question intent set (`eval/benchmark/intent_seed_v0.jsonl`) was drafted with Claude and is not yet
 human-verified.

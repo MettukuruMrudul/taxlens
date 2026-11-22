@@ -20,6 +20,9 @@ LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.openai.com/v1")
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 LLM_TIMEOUT_S = float(os.getenv("LLM_TIMEOUT_S", "60"))
+# For "thinking" models: how much internal reasoning to allow before answering
+# (e.g. low / medium / high). Empty = don't send the setting (provider default).
+LLM_REASONING_EFFORT = os.getenv("LLM_REASONING_EFFORT", "").strip()
 
 # --- Optional neural models (pip install -r requirements-ml.txt) -------------
 EMBED_MODEL = os.getenv("EMBED_MODEL", "")            # e.g. BAAI/bge-base-en-v1.5 (768-d)

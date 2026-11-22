@@ -1,6 +1,6 @@
 # Answer evaluation: seed_v0.jsonl
 
-Run 2026-11-19 15:51. System: `taxlens-answers:none`. Questions: 44. Corpus years: 2021-2024.
+Run 2026-11-22 17:18. System: `taxlens-answers:none`. Questions: 44. Corpus years: 2021-2024.
 
 | Metric | Value (95% CI) |
 |---|---|
