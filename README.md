@@ -130,20 +130,39 @@ python -m taxlens.index.hard_negatives               # training triples with cro
 
 Reports are written to `eval/results/`. Every metric is reported with a 95% bootstrap confidence interval.
 
-**About the numbers.** The 44-question benchmark (`eval/benchmark/seed_v0.jsonl`) and the 140-question intent
-set (`eval/benchmark/intent_seed_v0.jsonl`) were drafted with Claude and are **not yet human-verified**. Treat
-results on them as development measurements. Before quoting any figure (on a resume or elsewhere), verify the
-gold answers by hand, expand the benchmark, and re-run.
+**About the numbers.** Two benchmarks, both with every gold answer checked against the IRS source PDFs
+(`python -m taxlens.eval.verify_gold` records the document and page) and spot-checked by hand:
 
-| Metric | Target | Measured |
-|---|---|---|
-| Wrong-year answer rate | ≤ 3% | |
-| Answer correctness (verified benchmark) | ≥ 85% | |
-| Unsupported-claim rate | ≤ 5% | |
-| Year-detection accuracy | ≥ 95% | |
-| Intent macro-F1 | ≥ 0.85 | |
-| Abstention AUROC | ≥ 0.90 | |
-| Streaming time to first sentence (p50) | ≤ 1 s | |
+- **Dev set** (`eval/benchmark/seed_v0.jsonl`, 44 questions, drafted with Claude). Used to find and fix bugs,
+  so its score is optimistic by design.
+- **Held-out set** (`eval/benchmark/heldout_v0.jsonl`, 26 questions; 23 written by the project author, 3 by
+  Claude) covering the instructions and Publication 17. Written after the dev fixes and not used for tuning.
+  This is the number to quote.
+
+Results below are extractive mode (`LLM_PROVIDER=none`, BM25 only), run 2026-11-22.
+
+| Metric | Target | Held-out (26) | Dev (44) |
+|---|---|---|---|
+| Wrong-year answer rate | ≤ 3% | **0%** | 0% |
+| Citations from the asked tax year | 100% | **100%** | 100% |
+| Year-detection accuracy | ≥ 95% | **100%** | 100% |
+| Unsupported-claim rate | ≤ 5% | **0%** | 0% |
+| Answer correctness | ≥ 85% | **50.0%** [31–69%] | 97.7% [93–100%] |
+| Abstained / declined | | 11.5% | 0% |
+| Intent macro-F1 | ≥ 0.85 | not yet measured on verified labels | |
+| Abstention AUROC | ≥ 0.90 | not yet measured (rule-based abstainer) | |
+| Streaming time to first sentence (p50) | ≤ 1 s | not yet measured | |
+
+**Reading the gap.** The year-safety guarantees held on unseen questions: no answer used another year's text,
+no citation came from the wrong year, and no claim was unsupported. Accuracy dropped because the held-out set
+asks for facts deep in the instructions and Publication 17, where extractive quoting falls short. The main
+held-out failure groups: the answer lies past the quoted excerpt (an LLM would extract it), answers inside
+tables (EIC), an out-of-scope guard missing words like *401(k)* and *mileage*, and one dev-set rule (form-first
+retrieval) that misfired on a deadline question. Fixes for these will be measured on a new held-out set, since
+this one has now been inspected.
+
+The 140-question intent set (`eval/benchmark/intent_seed_v0.jsonl`) was drafted with Claude and is not yet
+human-verified.
 
 ## API
 

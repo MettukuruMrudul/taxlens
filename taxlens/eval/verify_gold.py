@@ -35,21 +35,33 @@ def norm(s: str) -> str:
 
 
 class PdfText:
-    """Lazily extracted, cached page text per (form, year)."""
+    """Page text per (form, year), extracted once and cached in data/text_cache/.
 
-    def __init__(self, raw_dir: Path = RAW_DIR):
+    Reading every page of the instructions and Publication 17 for four years
+    takes several minutes, so the first run saves the text and later runs
+    (including --mark) load it instantly. Delete data/text_cache/ to re-extract.
+    """
+
+    def __init__(self, raw_dir: Path = RAW_DIR, cache_dir: Path | None = None):
         self.raw_dir, self.cache = raw_dir, {}
+        self.cache_dir = cache_dir or (raw_dir.parent / "text_cache")
 
     def pages(self, form: str, year: int) -> list[str]:
         key = (form, year)
         if key not in self.cache:
             path = self.raw_dir / f"{form}--{year}.pdf"
+            cached = self.cache_dir / f"{form}--{year}.json"
             if not path.exists():
                 self.cache[key] = []
+            elif cached.exists() and cached.stat().st_mtime >= path.stat().st_mtime:
+                self.cache[key] = json.loads(cached.read_text(encoding="utf-8"))
             else:
                 import pdfplumber
                 with pdfplumber.open(path) as pdf:
+                    print(f"  reading {path.name} ({len(pdf.pages)} pages, first time only)...", flush=True)
                     self.cache[key] = [norm(p.extract_text() or "") for p in pdf.pages]
+                self.cache_dir.mkdir(parents=True, exist_ok=True)
+                cached.write_text(json.dumps(self.cache[key]), encoding="utf-8")
         return self.cache[key]
 
     def find(self, needle: str, year: int, forms=FORM_FIRST) -> tuple[str, int] | None:
